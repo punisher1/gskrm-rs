@@ -3,7 +3,7 @@ name = "gskrm"
 version = "0.1.0"
 edition = "2018"
 license = "MIT"
-description = "gsk cnc dll wrapper, x86 arch"
+description = "gsk cnc dll wrapper"
 documentation = "https://github.com/punisher1/gskrm-rs/readme.md"
 homepage = "https://github.com/punisher1/gskrm-rs"
 repository = "https://github.com/punisher1/gskrm-rs"
@@ -11,4 +11,4 @@ repository = "https://github.com/punisher1/gskrm-rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-gskrm-sys = { path = "gskrm-sys" }
+gskrm-sys = "0.1.0"
