@@ -1,6 +1,6 @@
 [package]
 name = "gskrm"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2018"
 license = "MIT"
 description = "gsk cnc dll wrapper"
@@ -12,3 +12,6 @@ repository = "https://github.com/punisher1/gskrm-rs"
 
 [dependencies]
 gskrm-sys = "0.1.0"
+num-traits = "0.2"
+num-derive = "0.3"
+num = "0.4.0"
