@@ -2,12 +2,9 @@
 extern crate num_derive;
 extern crate gskrm_sys;
 pub mod error;
+pub type HINSGSKRM = gskrm_sys::HINSGSKRM;
 
-use std::{
-    ffi::CString,
-    net::Ipv4Addr,
-    os::raw::{c_uchar, c_uint, c_void},
-};
+use std::{ffi::CString, net::Ipv4Addr, os::raw::c_uint};
 
 use error::{Error, Kind, Result, HANDLE_NOTEXIST};
 
@@ -45,7 +42,7 @@ pub enum CoordType {
     Rem,
 }
 
-pub fn gsk_create_instance(ip: Ipv4Addr) -> Option<gskrm_sys::HINSGSKRM> {
+pub fn gsk_create_instance(ip: Ipv4Addr) -> Option<HINSGSKRM> {
     let ip = ip.octets().as_mut_ptr();
 
     println!("ip is {:?}", ip);
@@ -59,11 +56,11 @@ pub fn gsk_create_instance(ip: Ipv4Addr) -> Option<gskrm_sys::HINSGSKRM> {
     }
 }
 
-pub fn gsk_close_instance(handle: Option<gskrm_sys::HINSGSKRM>) {
+pub fn gsk_close_instance(handle: Option<HINSGSKRM>) {
     unsafe { gskrm_sys::GSKRM_CloseInstance(handle.expect(HANDLE_NOTEXIST)) }
 }
 
-pub fn gsk_get_cnc_typename(handle: Option<gskrm_sys::HINSGSKRM>) -> Result<String> {
+pub fn gsk_get_cnc_typename(handle: Option<HINSGSKRM>) -> Result<String> {
     let type_name = CString::new("").unwrap().into_raw();
     unsafe {
         // let res = gsk_dll::GSKRM_GetCncTypeName(handle.expect(HANDLE_NOTEXIST), type_name);
@@ -79,7 +76,7 @@ pub fn gsk_get_cnc_typename(handle: Option<gskrm_sys::HINSGSKRM>) -> Result<Stri
     }
 }
 
-pub fn gsk_get_connect_state(handle: Option<gskrm_sys::HINSGSKRM>) -> Result<ConnectState> {
+pub fn gsk_get_connect_state(handle: Option<HINSGSKRM>) -> Result<ConnectState> {
     let state = unsafe { gskrm_sys::GSKRM_GetConnectState(handle.expect(HANDLE_NOTEXIST)) };
     match num::FromPrimitive::from_i32(state) {
         Some(state) => Ok(state),
@@ -91,7 +88,7 @@ pub fn gsk_get_connect_state(handle: Option<gskrm_sys::HINSGSKRM>) -> Result<Con
     }
 }
 
-pub fn gsk_get_workmode(handle: Option<gskrm_sys::HINSGSKRM>) -> Result<WorkMode> {
+pub fn gsk_get_workmode(handle: Option<HINSGSKRM>) -> Result<WorkMode> {
     let work_mode = &mut 0;
     unsafe {
         // let work_mode = libc::malloc(mem::size_of::<u32>()) as *mut u32; // c like
@@ -110,7 +107,7 @@ pub fn gsk_get_workmode(handle: Option<gskrm_sys::HINSGSKRM>) -> Result<WorkMode
     }
 }
 
-pub fn gsk_get_cncstate(handle: Option<gskrm_sys::HINSGSKRM>) -> Result<RunState> {
+pub fn gsk_get_cncstate(handle: Option<HINSGSKRM>) -> Result<RunState> {
     let run_state = 0 as *mut c_uint;
     unsafe {
         let res = gskrm_sys::GSKRM_GetCncState(handle.expect(HANDLE_NOTEXIST), run_state);
