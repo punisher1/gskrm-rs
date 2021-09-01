@@ -11,6 +11,9 @@ repository = "https://github.com/punisher1/gskrm-rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[registry]
+default = "c"
+
 [lib]
 name = "gskrm_sys"
 
