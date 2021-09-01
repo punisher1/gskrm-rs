@@ -43,12 +43,15 @@ pub enum CoordType {
 }
 
 pub fn gsk_create_instance(ip: Ipv4Addr) -> Option<HINSGSKRM> {
-    let ip = ip.octets().as_mut_ptr();
+    let mut ip = ip.octets();
 
-    println!("ip is {:?}", ip);
+    // println!("ip is {:?}", ip);
+    let ip = ip.as_mut_ptr();
+    // println!("ip pointer is {:?}", ip);
+
     unsafe {
         let handle = gskrm_sys::GSKRM_CreateInstance(ip, 1);
-        println!("handle is {:?}", handle);
+        // println!("handle is {:?}", handle);
         match handle.is_null() {
             true => None,
             false => Some(handle),
@@ -119,5 +122,20 @@ pub fn gsk_get_cncstate(handle: Option<HINSGSKRM>) -> Result<RunState> {
                 Some(err_index),
             )),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::net::Ipv4Addr;
+
+    use crate::gsk_create_instance;
+
+    #[test]
+    fn get_instance() {
+        let ip = "192.168.10.123";
+        let ip = ip.parse::<Ipv4Addr>().expect("ip convert error");
+        let handle = gsk_create_instance(ip);
+        assert!(handle.is_some())
     }
 }
