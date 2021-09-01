@@ -1,0 +1,16 @@
+[package]
+name = "gskrm-sys"
+version = "0.1.0"
+links = "gskrm"
+edition = "2018"
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "gskrm_sys"
+
+[dependencies]
+
+[build-dependencies]
+bindgen = "0.59.1"
