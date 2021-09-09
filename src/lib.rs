@@ -6,7 +6,7 @@ pub type HINSGSKRM = gskrm_sys::HINSGSKRM;
 
 use std::{ffi::CString, net::Ipv4Addr, os::raw::c_uint};
 
-use error::{Error, Kind, Result, HANDLE_NOTEXIST};
+use error::{communication, Error, Kind, Result, HANDLE_NOTEXIST};
 
 #[derive(FromPrimitive, ToPrimitive)]
 pub enum ConnectState {
@@ -70,11 +70,7 @@ pub fn gsk_get_cnc_typename(handle: Option<HINSGSKRM>) -> Result<String> {
         let res = gskrm_sys::GSKRM_GetCncTypeName(handle.unwrap(), type_name);
         match res {
             0 => Ok(CString::from_raw(type_name).into_string().unwrap()),
-            err_index => Err(Error::new(
-                Kind::Communication,
-                Some("获取数控类型异常"),
-                Some(err_index),
-            )),
+            error => Err(error::communication("获取数控类型异常", error)),
         }
     }
 }
@@ -83,11 +79,7 @@ pub fn gsk_get_connect_state(handle: Option<HINSGSKRM>) -> Result<ConnectState> 
     let state = unsafe { gskrm_sys::GSKRM_GetConnectState(handle.expect(HANDLE_NOTEXIST)) };
     match num::FromPrimitive::from_i32(state) {
         Some(state) => Ok(state),
-        None => Err(Error::new(
-            Kind::Communication,
-            Some("获取连接状态异常"),
-            None,
-        )),
+        None => Err(error::communication("获取连接状态异常", -1)),
     }
 }
 
@@ -101,11 +93,7 @@ pub fn gsk_get_workmode(handle: Option<HINSGSKRM>) -> Result<WorkMode> {
         match res {
             // 0 => Ok(num::FromPrimitive::from_u32(*work_mode.as_ref().unwrap()).unwrap()),// c like
             0 => Ok(num::FromPrimitive::from_u32(*work_mode).unwrap()),
-            err_index => Err(Error::new(
-                Kind::Processing,
-                Some("获取工作模式异常"),
-                Some(err_index),
-            )),
+            error => Err(error::processing("获取工作模式异常", error)),
         }
     }
 }
@@ -116,11 +104,7 @@ pub fn gsk_get_cncstate(handle: Option<HINSGSKRM>) -> Result<RunState> {
         let res = gskrm_sys::GSKRM_GetCncState(handle.expect(HANDLE_NOTEXIST), run_state);
         match res {
             0 => Ok(num::FromPrimitive::from_u32(*run_state.as_ref().unwrap()).unwrap()),
-            err_index => Err(Error::new(
-                Kind::Processing,
-                Some("获取当前运动状态异常"),
-                Some(err_index),
-            )),
+            error => Err(error::processing("获取当前运动状态异常", error)),
         }
     }
 }
